@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -70,13 +69,13 @@ public class MainActivity extends AppCompatActivity {
         final DatabaseAPI databaseAPI = new DatabaseAPI(mAWSAppSyncClient);
 
         setContentView(R.layout.activity_main);
-        Button startStop = findViewById(R.id.start_stop);
-        Button reset = findViewById(R.id.reset);
-        Button send = findViewById(R.id.send);
+        Button startStop = (Button) findViewById(R.id.start_stop);
+        Button reset = (Button) findViewById(R.id.reset);
+        Button send =( Button) findViewById(R.id.send);
         startStop.setEnabled(false);
         reset.setEnabled(false);
         send.setEnabled(false);
-        Spinner s = findViewById(R.id.category_spinner);
+        Spinner s = (Spinner) findViewById(R.id.category_spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, categories);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -102,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 for (ListRacersQuery.Item racer : categorizedRacers) {
                     categorizedRacerNumbers.add(racer.racerNumber());
                 }
-                Spinner racerSpinner = findViewById(R.id.racer_spinner);
+                Spinner racerSpinner = (Spinner) findViewById(R.id.racer_spinner);
                 ArrayAdapter<String> racerAdapter = new ArrayAdapter<>(getApplicationContext(),
                         android.R.layout.simple_spinner_item, categorizedRacerNumbers);
                 racerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -115,19 +114,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        timerTextView = findViewById(R.id.timerTextView);
+        timerTextView = (TextView) findViewById(R.id.timerTextView);
         timerTextView.setTextColor(Color.BLACK);
         timerTextView.setText(String.format(Locale.ENGLISH, "00:00.000"));
-        Spinner racerSpinner = findViewById(R.id.racer_spinner);
+        Spinner racerSpinner = (Spinner) findViewById(R.id.racer_spinner);
         racerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position > 0) {
                     currentRacer = categorizedRacers.get(position - 1);
                     timerTextView.setText(String.format(Locale.ENGLISH,"%s\nRacer Number: %s\n00:00.000", currentRacer.name(), currentRacer.racerNumber()));
-                    Button startStop = findViewById(R.id.start_stop);
-                    Button reset = findViewById(R.id.reset);
-                    Button send = findViewById(R.id.send);
+                    Button startStop = (Button) findViewById(R.id.start_stop);
+                    Button reset = (Button) findViewById(R.id.reset);
+                    Button send = (Button) findViewById(R.id.send);
                     startStop.setEnabled(true);
                     reset.setEnabled(true);
                     send.setEnabled(true);
@@ -145,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Button b = (Button) v;
-                Button reset = findViewById(R.id.reset);
+                Button reset = (Button) findViewById(R.id.reset);
                 if (b.getText().equals("Stop")) {
                     timerHandler.removeCallbacks(timerRunnable);
                     reset.setEnabled(true);
@@ -170,7 +169,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (isNetworkAvailable()) {
-                    DatabaseAPI.runMutation(currentRacer.id(), timerTextView.getText().toString());
+                    String time = timerTextView.getText().toString();
+                    time = time.substring(time.length() - 9, time.length());
+                    DatabaseAPI.runMutation(currentRacer.id(), time);
                 }
             }
         });
