@@ -85,27 +85,29 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 racers = databaseAPI.getRacers();
                 categorizedRacers = new ArrayList<>();
-                for (ListRacersQuery.Item racer : racers) {
-                    if (categories[position].equals(racer.category())) {
-                        categorizedRacers.add(racer);
+                if (racers != null) {
+                    for (ListRacersQuery.Item racer : racers) {
+                        if (categories[position].equals(racer.category())) {
+                            categorizedRacers.add(racer);
+                        }
                     }
-                }
-                Collections.sort(categorizedRacers, new Comparator<ListRacersQuery.Item>() {
-                    @Override
-                    public int compare(ListRacersQuery.Item o1, ListRacersQuery.Item o2) {
-                        return Integer.parseInt(o1.racerNumber()) - Integer.parseInt(o2.racerNumber());
+                    Collections.sort(categorizedRacers, new Comparator<ListRacersQuery.Item>() {
+                        @Override
+                        public int compare(ListRacersQuery.Item o1, ListRacersQuery.Item o2) {
+                            return Integer.parseInt(o1.racerNumber()) - Integer.parseInt(o2.racerNumber());
+                        }
+                    });
+                    ArrayList<String> categorizedRacerNumbers = new ArrayList<>();
+                    categorizedRacerNumbers.add("");
+                    for (ListRacersQuery.Item racer : categorizedRacers) {
+                        categorizedRacerNumbers.add(racer.racerNumber());
                     }
-                });
-                ArrayList<String> categorizedRacerNumbers = new ArrayList<>();
-                categorizedRacerNumbers.add("");
-                for (ListRacersQuery.Item racer : categorizedRacers) {
-                    categorizedRacerNumbers.add(racer.racerNumber());
+                    Spinner racerSpinner = (Spinner) findViewById(R.id.racer_spinner);
+                    ArrayAdapter<String> racerAdapter = new ArrayAdapter<>(getApplicationContext(),
+                            android.R.layout.simple_spinner_item, categorizedRacerNumbers);
+                    racerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    racerSpinner.setAdapter(racerAdapter);
                 }
-                Spinner racerSpinner = (Spinner) findViewById(R.id.racer_spinner);
-                ArrayAdapter<String> racerAdapter = new ArrayAdapter<>(getApplicationContext(),
-                        android.R.layout.simple_spinner_item, categorizedRacerNumbers);
-                racerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                racerSpinner.setAdapter(racerAdapter);
             }
 
             @Override

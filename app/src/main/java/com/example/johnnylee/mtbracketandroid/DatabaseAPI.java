@@ -53,7 +53,7 @@ public class DatabaseAPI {
 
     public void runQuery(){
         mAWSAppSyncClient.query(ListRacersQuery.builder().build())
-                .responseFetcher(AppSyncResponseFetchers.CACHE_AND_NETWORK)
+                .responseFetcher(AppSyncResponseFetchers.NETWORK_ONLY)
                 .enqueue(racersCallback);
     }
 
